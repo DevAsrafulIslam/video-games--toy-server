@@ -23,6 +23,27 @@ const client = new MongoClient(uri, {
   },
 });
 
+const verifyJWT = (req, res, next) => {
+  console.log("hitting verity JWT");
+  console.log(req.headers.authorization);
+  const authorization = req.headers.authorization;
+  if (authorization) {
+    return res
+      .status(401)
+      .send({ error: true, message: "unauthorized access" });
+  }
+  const token = authorization.split(" ")[1];
+  console.log("token inside jwt", token);
+  jwt.verify(token.process.env.ACCESS_TOKEN, (error, secoded) => {
+    if (error) {
+      return res
+        .status(404)
+        .send({ error: true, message: "unauthorized access" });
+    }
+    req.decoded = secoded;
+    next();
+  });
+};
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -61,8 +82,8 @@ async function run() {
 
     // Bookings routes
 
-    app.get("/bookings", async (req, res) => {
-      console.log(req.query.email);
+    app.get("/bookings", verifyJWT, async (req, res) => {
+      console.log("came back verify JWT" );
       let query = {};
       if (req.query?.email) {
         query = { email: req.query.email };
