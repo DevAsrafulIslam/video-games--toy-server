@@ -83,7 +83,7 @@ async function run() {
     // Bookings routes
 
     app.get("/bookings", verifyJWT, async (req, res) => {
-      console.log("came back verify JWT" );
+      console.log("came back verify JWT");
       let query = {};
       if (req.query?.email) {
         query = { email: req.query.email };
@@ -135,9 +135,9 @@ run().catch(console.dir);
 // MongoDb
 
 app.get("/", (req, res) => {
-  res.send("doctor is running");
+  res.send("Video game is running");
 });
 
 app.listen(port, () => {
-  console.log(`car doctor server is runnign on this port ${port}`);
+  console.log(`video game server is runnign on this port ${port}`);
 });
